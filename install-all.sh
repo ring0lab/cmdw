@@ -4,7 +4,7 @@
 # wrapper for all users on a given system.
 #
 # Install:
-#   source <(curl -s https://raw.githubusercontent.com/0xZDH/cmdw/master/install-all.sh)
+#   source <(curl -s https://raw.githubusercontent.com/ring0lab/cmdw/master/install-all.sh)
 #######################################
 
 # Validate the current terminal is Bash or Zsh.
@@ -15,7 +15,7 @@
 # to be overwritten when it exists to allow for updates
 # to be installed.
 curl -s -o "$HOME/.cmdw" \
-  -q "https://raw.githubusercontent.com/0xZDH/cmdw/master/cmdw.sh"
+  -q "https://raw.githubusercontent.com/ring0lab/cmdw/master/cmdw.sh"
 
 # Identify current shell type
 [ -n "$ZSH_VERSION" ] && \

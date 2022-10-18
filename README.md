@@ -13,6 +13,18 @@ start    Wed 07 Oct 2020 05:00:00 AM UTC
 stop     Wed 07 Oct 2020 05:00:00 AM UTC
 ```
 
+Switch to a different timezone other than UTC:
+```bash
+# -- To display a list of available timezone
+
+cmdw_timezone
+
+# -- Set a specific timezone
+
+cmdw_set_timezone "Asia/Singapore"
+
+```
+
 ## Installation:
 1. Write this script to your home folder as `.cmdw`:
     * `vim ~/.cmdw`

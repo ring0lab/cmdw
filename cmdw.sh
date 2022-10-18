@@ -56,6 +56,10 @@
 #    CMDW_IGNORE=()
 #######################################
 
+# Set global timezone variable
+
+set_tz=''
+
 # Validate the current terminal is Bash or Zsh.
 [ -n "$BASH_VERSION" -o -n "$ZSH_VERSION" ] || return 0
 
@@ -83,7 +87,7 @@ CMDWSIZE="${CMDWSIZE:-10000}"
 # extend the ignore list per session by adding to the
 # list within a terminal session with the same command.
 CMDW_IGNORE=( 'clear' 'cmdw_enable' 'cmdw_disable' 'cmdw_history'
-              'cmdw_history +[0-9]{1,}' )
+              'cmdw_history +[0-9]{1,}' 'cmdw_timezone')
 
 # Enable the wrapper by default.
 CMDW_ENABLE=1
@@ -100,6 +104,35 @@ cmdw_history() {
     else
         grep -n '^#' "$HOME/.cmdw_history" | \
         sed -E 's/^([0-9]{1,}):# ?(.*)$/ \1   \2/'
+    fi
+}
+
+# Enable different timezone other than the default UTC.
+
+get_time() {
+    if [ -z "$set_tz" ]; then
+        local timezone=`date -u`
+    else 
+        local timezone=`TZ="$set_tz" date +"%a %b %d %r %Z %Y"`
+    fi
+    echo $timezone
+}
+
+cmdw_timezone() {
+    local tz=$1
+    if [ -z "$tz" ]; then
+        timedatectl list-timezones
+    else 
+        timedatectl list-timezones | grep -i $tz
+    fi
+}
+
+cmdw_set_timezone () {
+    tz=$1
+    if [ -z "$tz" ]; then
+        echo "Ex: cmdw_set_timezone Asia/Singapore"
+    else 
+        set_tz=$tz
     fi
 }
 
@@ -158,7 +191,7 @@ __cmdw_preexec() {
     unset __cmdw_preexec_enable
 
     # Grab the start timestamp pre-execution.
-    __cmdw_start_date="$(date -u)"
+    __cmdw_start_date="$(get_time)"
 }
 
 # Perform post-command execution handling to collect the
@@ -180,7 +213,7 @@ __cmdw_precmd() {
     [[ -z "${CMDW_ENABLE:-}" || "$CMDW_ENABLE" -ne 1 ]] && return 0
 
     # Grab the stop timestamp post-execution.
-    __cmdw_stop_date="$(date -u)"
+    __cmdw_stop_date="$(get_time)"
 
     # Logging & Output
 
